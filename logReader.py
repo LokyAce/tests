@@ -1,23 +1,36 @@
+# use data object instead regexp
+# use param to determine min-hour-days
 import sys, time, re
 from datetime import datetime
 from collections import Counter
 
-LOG_FILE_NAME = 'd:/Work/Python/tests/logReader/access.log'
-#TEST_LOG_STR = '103.131.71.47 - - [20/Nov/2024:00:13:54 +0000] "GET /robots.txt HTTP/1.1" 301 525 "-" "Mozilla/5.0 (compatible; coccocbot-image/1.0; +http://help.coccoc.com/searchengine)" '
+#Parsing paramters
+LOG_FILE_NAME = 'access.log'
+if sys.argv[1]:
+    log_file_name = sys.argv[1]
+else:
+    log_file_name = LOG_FILE_NAME
+if sys.argv[2]:
+    granularity = sys.argv[2]
+else:
+    granularity = 'sec'
+log_dict = {}
+log_counts = Counter()
 
-def File2List(filename):
+
+
+def File_to_List(filename):
     with open(filename, 'r') as f:    
         return f.readlines()
 
-def File2Str(filename):
+def File_to_Str(filename):
     with open(filename, 'r') as f:
         return f.read()
 
-print('Usage: 1-st param to specify a log file. \n')
-fileLines = File2List(LOG_FILE_NAME)
-#filestr = File2Str(LOG_FILE_NAME)
-log_dict = {}
-log_counts = Counter()
+print('LogParser usage: \n  1-st param to specify a log file, \n  2-nd parameter: granularity. Valid values: sec/min/hour \n Example: logReader.py access.log sec')
+
+fileLines = File_to_List(log_file_name)
+#filestr = File2Str(log_file_name)
 
 pattern = r'(\d+\.\d+\.\d+\.\d+) - - \[(.*?)\] (.*)' 
 for logLine in fileLines:
@@ -25,8 +38,7 @@ for logLine in fileLines:
     match = re.match(pattern, logLine)    
     if match:
         ip, date_time, other = match.groups()
-        #print (ip, '\n', date_time, '\n', other, '\n',)                #DEBUG
-        #date_str = '20/Nov/2024:00:13:54 +0000'
+        #print (ip, '\n', date_time, '\n', other, '\n',)                #DEBUG   
         date_format = '%d/%b/%Y %H:%M:%S %z'
         datePattern = r'(\d{2}/[A-Za-z]{3}/\d{4}):(\d{2}:\d{2}:\d{2})'
         date_match = re.match(datePattern, date_time)
@@ -36,5 +48,5 @@ for logLine in fileLines:
             log_dict[logRecDate+'_'+logRecTime] = ip+other
             log_counts[logRecDate+'_'+logRecTime] += 1
 
-#print('Dict: ', log_dict, '\n')
+#print('Dict: ', log_dict, '\n')                                         #DEBUG
 print ('Counter ', log_counts)
