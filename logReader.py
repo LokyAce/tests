@@ -1,4 +1,5 @@
-import re, argparse, json
+import re
+import argparse
 from datetime import datetime
 from datetime import date
 from collections import Counter
@@ -38,6 +39,7 @@ def process_log_regexp (file_name, precision): #RegExp only method
         if match:
             ip, date_time, other = match.groups()
             #print (ip, '\n', date_time, '\n', other, '\n',)                    #DEBUG   
+            date_pattern = ''
             if precision == 'sec':
                 date_pattern = r'(\d{2}/[A-Za-z]{3}/\d{4}):(\d{2}:\d{2}:\d{2})'
             if precision == 'min':
@@ -73,7 +75,7 @@ def process_log_dateobject (file_name, precision): #DateObject method
             if precision == 'min':
                 granulated_dateobj = date_obj.replace(second=0)
             if precision == 'hour':
-                granulated_dateoj = date_obj.replace(minute=0, second=0)
+                granulated_dateobj = date_obj.replace(minute=0, second=0)
             #print('\n granulated_dateObj', granulated_dateObj, '\n')           #DEBUG
             log_dict[granulated_dateobj] = ip+other
             log_counts[granulated_dateobj] += 1
