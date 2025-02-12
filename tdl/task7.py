@@ -1,4 +1,4 @@
-#🔹 Task 1: Nested Dictionary Aggregation
+#🔹 Task 7: Nested Dictionary Aggregation
 #🎯 Problem:
 #You have a list of dictionaries where each dictionary represents a product, and each product belongs to a category. Your goal is to group the products by category and sum their prices.
 
@@ -21,3 +21,28 @@ data = [
 #    "Furniture": {
 #  }
 #}
+groupped_dict ={}
+#record = (key: {"products":[]},{"price":int})
+
+def main():
+    print('Hello!\n')
+    for l_dict in data:
+        if not l_dict["category"] in groupped_dict:
+            #creating dynamic structures
+            groupped_dict[l_dict["category"]] = {}
+            groupped_dict[l_dict["category"]]["products"]=[]
+            groupped_dict[l_dict["category"]]["total_price"] = 0
+            #adding values
+            groupped_dict[l_dict["category"]]["products"].append(l_dict["product"])
+            groupped_dict[l_dict["category"]]["total_price"] += l_dict["price"]
+        else:
+            groupped_dict[l_dict["category"]]["products"].append(l_dict["product"])
+            groupped_dict[l_dict["category"]]["total_price"] += l_dict["price"]
+        #print(l_dict, "\n\n")
+    print("\ngroupped_dict:\n\n")    
+    print(groupped_dict)
+    
+
+
+if __name__ == '__main__':
+    main()
